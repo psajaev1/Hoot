@@ -1,6 +1,6 @@
 var express = require('express');
 var app = express();
-const uri = 'mongodb+srv://nicolas-isaza:Ni08291998@blood-xdwhh.mongodb.net/test?retryWrites=true&w=majority';
+const uri = 'mongodb+srv://admin:adminPassword@cluster0.xejvj.mongodb.net/Hoot?retryWrites=true&w=majority';
 var mongoose = require('mongoose');
 
 const DriveSchema = mongoose.Schema({
