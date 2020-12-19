@@ -8,6 +8,7 @@ CREATE TABLE `project`.`Users` (
   `grad_year` INT NULL,
   `occupation` VARCHAR(45) NOT NULL,
   `major` VARCHAR(45) NULL,
+  `school` VARCHAR(45) NULL,
   PRIMARY KEY (`user_id`)
   UNIQUE INDEX `user_id_UNIQUE` (`user_id` ASC) VISIBLE);
 
@@ -18,9 +19,11 @@ CREATE TABLE `project`.`Mentors` (
   `interest1` VARCHAR(45) NOT NULL,
   `interest2` VARCHAR(45) NULL,
   `interest3` VARCHAR(45) NULL,
-  `grad_year` INT NOT NULL,
+  `grad_year` INT NULL,
   `occupation` VARCHAR(45) NOT NULL,
   `major` VARCHAR(45) NULL,
+  `school1` VARCHAR(60) NULL,
+  `school2` VARCHAR(60) NULL,
   PRIMARY KEY (`mentor_id`),
   UNIQUE INDEX `mentor_id_UNIQUE` (`mentor_id` ASC) VISIBLE);
 
