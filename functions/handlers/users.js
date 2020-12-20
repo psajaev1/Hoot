@@ -59,3 +59,29 @@ exports.newUser = (req, res) => {
       res.status(500).json({ error: "Error, unsuccessful" });
     });
 };
+
+// Get own user details
+exports.getAuthenticatedUser = (req, res) => {
+  let userData = {};
+  db.doc(`/Users/${req.user.username}`)
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        userData.credentials = doc.data();
+        return db
+          .collection("likes")
+          .where("username", "==", req.user.username)
+          .get()
+          .then((data) => {
+            userData.likes = [];
+            data.forEach((doc) => {
+              userData.likes.push(doc.data());
+            });
+            return res.json(userData);
+          })
+          .catch((err) => {
+            return res.status(500).json({ error: err.code });
+          });
+      }
+    });
+};
