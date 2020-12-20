@@ -98,6 +98,63 @@ app.get("/pairings", (req, res) => {
     .catch((err) => console.log(err));
 });
 
+// Authentication middleware
+const FBAuth = (req, res, next) => {
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer ")
+  ) {
+    idToken = req.headers.authorization.split("Bearer ")[1];
+  } else {
+    console.log("No token found");
+    return res.status(403).json({ error: "Unauthorized" });
+  }
+
+  admin
+    .auth()
+    .verifyIdToken(idToken)
+    .then((decodedToken) => {
+      req.user = decodedToken;
+      console.log(decodedToken);
+      return db
+        .collection("Users")
+        .where("userId", "==", req.user.uid)
+        .limit(1)
+        .get();
+    })
+    .then((data) => {
+      req.user.username = data.docs[0].data().username;
+      return next();
+    })
+    .catch((err) => {
+      console.error("Error while verifying token", err);
+      return res.status(403).json(err);
+    });
+};
+
+// Post a new post
+app.post("/post", FBAuth, (req, res) => {
+  if (req.body.body.trim() === "") {
+    return res.status(400).json({ body: "Body must not be empty" });
+  }
+
+  const newPost = {
+    body: req.body.body,
+    username: req.user.username,
+    createdAt: new Date().toISOString(),
+  };
+
+  db.collection("Posts")
+    .add(newPost)
+    .then((doc) => {
+      res.json({ message: `document ${doc.id} created seccessfully` });
+    })
+    .catch((err) => {
+      res.status(500).json({ error: "Something went wrong" });
+      console.log(err);
+    });
+});
+
 // Create new user
 app.post("/user", (req, res) => {
   const newUser = {
@@ -270,8 +327,11 @@ app.post("/login", (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      if(err.code === "auth/wrong-password") {return res.status(403).json({general: "Incorrect credentials, please try again"})
-    } else return res.status(500).json({ error: err.code });
+      if (err.code === "auth/wrong-password") {
+        return res
+          .status(403)
+          .json({ general: "Incorrect credentials, please try again" });
+      } else return res.status(500).json({ error: err.code });
     });
 });
 
