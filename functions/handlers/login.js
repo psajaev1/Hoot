@@ -1,6 +1,10 @@
 const { db, admin } = require("../util/admin");
 const firebaseConfig = require("../util/config");
-const { validateSignupData, validateLoginData } = require("../util/validators");
+const {
+  validateSignupData,
+  validateLoginData,
+  reduceUserDetails,
+} = require("../util/validators");
 
 const firebase = require("firebase");
 // const { json } = require("express");
@@ -92,6 +96,21 @@ exports.signup = (req, res) => {
     });
 };
 
+// Add user details
+exports.addUserDetails = (req, res) => {
+  let userDetails = reduceUserDetails(req.body);
+
+  db.doc(`/Users/${req.user.username}`)
+    .update(userDetails)
+    .then(() => {
+      return res.json({ message: "Details added successfully" });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.code });
+    });
+};
+
+// Upload user image
 exports.uploadImage = (req, res) => {
   const BusBoy = require("busboy");
   const path = require("path");
