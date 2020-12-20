@@ -11,7 +11,12 @@ const {
 } = require("./handlers/users");
 const { getAllMentors, newMentor } = require("./handlers/mentors");
 const { getAllPairings, newPairing } = require("./handlers/pairings");
-const { getAllPosts, newPost, getPost } = require("./handlers/posts");
+const {
+  getAllPosts,
+  newPost,
+  getPost,
+  commentOnPost,
+} = require("./handlers/posts");
 const {
   login,
   signup,
@@ -35,12 +40,11 @@ app.post("/pairing", newPairing);
 // Posts routes
 app.get("/posts", getAllPosts);
 app.post("/post", FBAuth, newPost);
-app.get('/post/:postId', getPost);
+app.get("/post/:postId", getPost);
 //TODO delete post
 //TODO like post
 //TODO unlike post
-//TODO comment on post
-
+app.post("/post/:postId/comment", FBAuth, commentOnPost);
 
 // Login routes
 app.post("/login", login);
