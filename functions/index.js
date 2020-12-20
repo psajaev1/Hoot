@@ -10,19 +10,20 @@ const app = require("express")();
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-    apiKey: "AIzaSyBO5cCEFEWcQcdaxkoDXe6_NyrdSvxh_cM",
-    authDomain: "senior-design-a1e06.firebaseapp.com",
-    databaseURL: "https://senior-design-a1e06-default-rtdb.firebaseio.com",
-    projectId: "senior-design-a1e06",
-    storageBucket: "senior-design-a1e06.appspot.com",
-    messagingSenderId: "366169095626",
-    appId: "1:366169095626:web:8509324ffd8580f804e333",
-    measurementId: "G-WH51SN4XDS"
-  };
+  apiKey: "AIzaSyBO5cCEFEWcQcdaxkoDXe6_NyrdSvxh_cM",
+  authDomain: "senior-design-a1e06.firebaseapp.com",
+  databaseURL: "https://senior-design-a1e06-default-rtdb.firebaseio.com",
+  projectId: "senior-design-a1e06",
+  storageBucket: "senior-design-a1e06.appspot.com",
+  messagingSenderId: "366169095626",
+  appId: "1:366169095626:web:8509324ffd8580f804e333",
+  measurementId: "G-WH51SN4XDS",
+};
 
-const firebase = require('firebase');
+const firebase = require("firebase");
 firebase.initializeApp(firebaseConfig);
 
+// Get all users
 app.get("/users", (req, res) => {
   db.collection("Users")
     .orderBy("username", "desc")
@@ -33,7 +34,6 @@ app.get("/users", (req, res) => {
         users.push({
           userId: doc.id,
           username: doc.data().username,
-          password: doc.data().password,
           firstName: doc.data().firstName,
           lastName: doc.data().lastName,
           interest1: doc.data().interest1,
@@ -43,7 +43,6 @@ app.get("/users", (req, res) => {
           occupation: doc.data().occupation,
           major: doc.data().major,
           school: doc.data().school,
-          email: doc.data().email,
         });
       });
       return res.json(users);
@@ -51,9 +50,10 @@ app.get("/users", (req, res) => {
     .catch((err) => console.log(err));
 });
 
+// Get all mentors
 app.get("/mentors", (req, res) => {
   db.collection("Mentors")
-  .orderBy('username', 'desc')
+    .orderBy("username", "desc")
     .get()
     .then((data) => {
       let mentors = [];
@@ -61,7 +61,6 @@ app.get("/mentors", (req, res) => {
         mentors.push({
           mentorId: doc.id,
           username: doc.data().username,
-          password: doc.data().password,
           firstName: doc.data().firstName,
           lastName: doc.data().lastName,
           interest1: doc.data().interest1,
@@ -72,7 +71,6 @@ app.get("/mentors", (req, res) => {
           major: doc.data().major,
           school1: doc.data().school1,
           school2: doc.data().school2,
-          email: doc.data().email,
         });
       });
       return res.json(mentors);
@@ -80,9 +78,10 @@ app.get("/mentors", (req, res) => {
     .catch((err) => console.log(err));
 });
 
+// Get all pairings
 app.get("/pairings", (req, res) => {
   db.collection("Pairings")
-  .orderBy('focus', 'desc')
+    .orderBy("focus", "desc")
     .get()
     .then((data) => {
       let pairings = [];
@@ -99,10 +98,11 @@ app.get("/pairings", (req, res) => {
     .catch((err) => console.log(err));
 });
 
+// Create new user
 app.post("/user", (req, res) => {
   const newUser = {
+    userId: req.body.userId,
     username: req.body.username,
-    password: req.body.password,
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     interest1: req.body.interest1,
@@ -112,7 +112,6 @@ app.post("/user", (req, res) => {
     occupation: req.body.occupation,
     major: req.body.major,
     school: req.body.school,
-    email: req.body.email,
   };
 
   db.collection("Users")
@@ -125,10 +124,11 @@ app.post("/user", (req, res) => {
     });
 });
 
+// Create new mentor
 app.post("/mentor", (req, res) => {
   const newMentor = {
+    mentorId: req.body.mentorId,
     username: req.body.username,
-    password: req.body.password,
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     interest1: req.body.interest1,
@@ -139,7 +139,6 @@ app.post("/mentor", (req, res) => {
     major: req.body.major,
     school1: req.body.school1,
     school2: req.body.school2,
-    email: req.body.email,
   };
 
   db.collection("Mentors")
@@ -152,6 +151,7 @@ app.post("/mentor", (req, res) => {
     });
 });
 
+// Create new pairing
 app.post("/pairing", (req, res) => {
   const newPairing = {
     user: req.body.user,
@@ -166,6 +166,83 @@ app.post("/pairing", (req, res) => {
     })
     .catch((err) => {
       res.status(500).json({ error: "Error, unsuccessful" });
+    });
+});
+
+// Signup helpers
+const isEmpty = (string) => {
+  if (string.trim() === "") return true;
+  else return false;
+};
+
+const isEmail = (email) => {
+  const regEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  if (email.match(regEx)) return true;
+  else return false;
+};
+
+// Signup new user
+app.post("/signup", (req, res) => {
+  const newUser = {
+    email: req.body.email,
+    password: req.body.password,
+    confirmPassword: req.body.confirmPassword,
+    username: req.body.username,
+    isMentor: req.body.isMentor,
+  };
+
+  let errors = {};
+
+  if (isEmpty(newUser.email)) {
+    errors.email = "Must not be empty";
+  } else if (!isEmail(newUser.email)) {
+    errors.email = "Must be a valid email address";
+  }
+  if (isEmpty(newUser.password)) errors.password = "Must not be empty";
+  if (newUser.password !== newUser.confirmPassword)
+    errors.password = "Passwords must match";
+  if (isEmpty(newUser.username)) errors.username = "Must not be empty";
+
+  if (Object.keys(errors).length > 0) return res.status(400).json(errors);
+
+  let token, userId;
+  db.doc(`/Users/${newUser.username}`)
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        return res
+          .status(400)
+          .json({ username: "This username is already taken" });
+      } else {
+        return firebase
+          .auth()
+          .createUserWithEmailAndPassword(newUser.email, newUser.password);
+      }
+    })
+    .then((data) => {
+      userId = data.user.uid;
+      return data.user.getIdToken();
+    })
+    .then((idToken) => {
+      token = idToken;
+      const userCredentials = {
+        username: newUser.username,
+        email: newUser.email,
+        userId: userId,
+        isMentor: newUser.isMentor
+      };
+      return db.doc(`/Users/${newUser.username}`).set(userCredentials);
+    })
+    .then(() => {
+      return res.status(201).json({ token });
+    })
+    .catch((err) => {
+      console.error(err);
+      if (err.code === "auth/email-already-in-use") {
+        return res.status(400).json({ email: "This email is already in use" });
+      } else {
+        return res.status(500).json({ error: err.code });
+      }
     });
 });
 
