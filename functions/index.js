@@ -8,7 +8,7 @@ const { getAllUsers, newUser } = require("./handlers/users");
 const { getAllMentors, newMentor } = require("./handlers/mentors");
 const { getAllPairings, newPairing } = require("./handlers/pairings");
 const { getAllPosts, newPost } = require("./handlers/posts");
-const { login, signup } = require("./handlers/login");
+const { login, signup, uploadImage } = require("./handlers/login");
 
 // Users routes
 app.get("/users", getAllUsers);
@@ -29,5 +29,6 @@ app.post("/post", FBAuth, newPost);
 // Login routes
 app.post("/login", login);
 app.post("/signup", signup);
+app.post("/user/image", FBAuth, uploadImage);
 
 exports.api = functions.https.onRequest(app);
