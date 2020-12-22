@@ -28,7 +28,7 @@ export class Profile extends Component {
       dayjs.extend(relativeTime)
     const {
       classes,
-      users: { username, imageUrl},
+      profile: { username, imageUrl},
     } = this.props;
     return (
       <Card className={classes.card}>
@@ -43,7 +43,7 @@ export class Profile extends Component {
             variant="h5"
             color="primary"
             component={Link}
-            to={`/users/${username}`}
+            to={`/profile/${username}`}
           >
             {username}
           </Typography>

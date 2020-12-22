@@ -32,7 +32,7 @@ export class home extends Component {
     return (
       <Grid container spacing={10}>
         <Grid item sm={4} xs={12}>
-          <p>Personal Profile</p>
+            TODO: User Account Information
         </Grid>
         <Grid item sm={8} xs={12}>
           {showPosts}
