@@ -45,7 +45,7 @@ class signup extends Component {
             email: '',
             password: '',
             confirmPassword: '',
-            handle: '',
+            username: '',
             loading: false,
             errors:{}
         }
@@ -60,7 +60,7 @@ class signup extends Component {
             email: this.state.email,
             password: this.state.password,
             confirmPassword: this.state.confirmPassword,
-            handle: this.state.handle
+            username: this.state.username
         };
         axios
         .post('/signup', newUserData)
@@ -91,9 +91,8 @@ class signup extends Component {
             <Grid container className={classes.form}>
                 <Grid item sm/>
                 <Grid item sm>
-                    <img src={AppIcon} alt ="monkey" className={classes.image}/>
                     <Typography variant="h2" className={classes.pageTitle}>
-                        SignUp
+                        Sign Up
                     </Typography>
                     <form noValidate onSubmit={this.handleSubmit}>
                         <TextField 
@@ -133,14 +132,14 @@ class signup extends Component {
                             fullWidth
                         />
                         <TextField
-                            id="handle"
-                            name="handle"
-                            type="handle"
-                            label="Handle"
+                            id="username"
+                            name="username"
+                            type="username"
+                            label="Username"
                             className={classes.textField}
-                            helperText={errors.Handle}
-                            error={errors.Handle ? true : false}
-                            value={this.state.Handle}
+                            helperText={errors.username}
+                            error={errors.username ? true : false}
+                            value={this.state.username}
                             onChange={this.handleChange}
                             fullWidth
                         />

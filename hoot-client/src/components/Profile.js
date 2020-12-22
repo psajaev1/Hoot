@@ -23,18 +23,18 @@ const styles = {
     objectFit: "cover",
   },
 };
-export class Posts extends Component {
+export class Profile extends Component {
   render() {
       dayjs.extend(relativeTime)
     const {
       classes,
-      posts: { body, commentCount, createdAt, likeCount, userImage, username },
+      users: { username, imageUrl},
     } = this.props;
     return (
       <Card className={classes.card}>
         <CardMedia
           className={classes.image}
-          image={userImage}
+          image={imageUrl}
           title="Profile pic"
           style={styles.image}
         />
@@ -47,12 +47,10 @@ export class Posts extends Component {
           >
             {username}
           </Typography>
-          <Typography variant="body2">{dayjs(createdAt).fromNow()}</Typography>
-          <Typography variant="body1">{body}</Typography>
         </CardContent>
       </Card>
     );
   }
 }
 
-export default withStyles(styles)(Posts);
+export default withStyles(styles)(Profile);
