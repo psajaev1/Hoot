@@ -45,3 +45,7 @@
 .toolbar-container {
   margin: auto;
 }
+
+a{
+  text-decoration: none;
+}
