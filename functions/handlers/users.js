@@ -38,6 +38,7 @@ exports.newUser = (req, res) => {
   const newUser = {
     userId: req.body.userId,
     username: req.body.username,
+    password: req.body.password,
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     interest1: req.body.interest1,
