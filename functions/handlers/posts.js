@@ -81,8 +81,9 @@ exports.getPost = (req, res) => {
     });
 };
 
+// Delete a post
 exports.deletePost = (req, res) => {
-  const document = dc.doc(`/Posts/${req.params.postId}`);
+  const document = db.doc(`/Posts/${req.params.postId}`);
   document.get()
     .then(doc => {
       if(!doc.exists) {
