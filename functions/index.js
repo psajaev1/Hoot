@@ -15,6 +15,7 @@ const {
   getAllPosts,
   newPost,
   getPost,
+  deletePost,
   commentOnPost,
   likePost,
   unlikePost,
@@ -43,7 +44,7 @@ app.post("/pairing", newPairing);
 app.get("/posts", getAllPosts);
 app.post("/post", FBAuth, newPost);
 app.get("/post/:postId", getPost);
-//TODO delete post
+app.delete("/posts/:postId", FBAuth, deletePost);
 app.get("/post/:postId/like", FBAuth, likePost);
 app.get("/post/:postId/unlike", FBAuth, unlikePost);
 app.post("/post/:postId/comment", FBAuth, commentOnPost);
