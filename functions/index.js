@@ -4,6 +4,8 @@ const app = require("express")();
 
 const FBAuth = require("./util/FBAuth");
 
+const { db } = require("./util/admin");
+
 const {
   getAllUsers,
   newUser,
@@ -15,6 +17,7 @@ const {
   getAllPosts,
   newPost,
   getPost,
+  deletePost,
   commentOnPost,
   likePost,
   unlikePost,
@@ -43,7 +46,7 @@ app.post("/pairing", newPairing);
 app.get("/posts", getAllPosts);
 app.post("/post", FBAuth, newPost);
 app.get("/post/:postId", getPost);
-//TODO delete post
+app.delete("/posts/:postId", FBAuth, deletePost);
 app.get("/post/:postId/like", FBAuth, likePost);
 app.get("/post/:postId/unlike", FBAuth, unlikePost);
 app.post("/post/:postId/comment", FBAuth, commentOnPost);
@@ -55,3 +58,64 @@ app.post("/user/image", FBAuth, uploadImage);
 app.post("/user", FBAuth, addUserDetails);
 
 exports.api = functions.https.onRequest(app);
+
+exports.createNotificationOnLike = functions.firestore.document(`/Likes/{id}`)
+  .onCreate((snapshot) => {
+  return db.doc(`/Posts/${snapshot.data().postId}`).get()
+    .then((doc) => {
+      if (doc.exists) {
+        return db.doc(`/Notifications/${snapshot.id}`).set({
+          createdAt: new Date().toISOString,
+          recipient: doc.data().username,
+          sender: snapshot.data().username,
+          type: `Like`,
+          read: false,
+          postId: doc.id
+        });
+      }
+    })
+    .then(() => {
+      return;
+    })
+    .catch(err => {
+      console.error(err);
+      return;
+    });
+  });
+
+  exports.deleteNotificationOnUnlike = functions.firestore.document(`/Likes/{id}`)
+  .onDelete((snapshot) => {
+    return db.doc(`/Notifications/${snapshot.id}`)
+    .delete()
+    .then(() => {
+      return;
+    })
+    .cathc((err) => {
+      console.error(err);
+      return;
+    });
+  });
+
+  exports.createNotificationOnComment = functions.firestore.document(`/Comments/{id}`)
+  .onCreate((snapshot) => {
+  return db.doc(`/Posts/${snapshot.data().postId}`).get()
+    .then(doc => {
+      if (doc.exists) {
+        return db.doc(`/Notifications/${snapshot.id}`).set({
+          createdAt: new Date().toISOString,
+          recipient: doc.data().username,
+          sender: snapshot.data().username,
+          type: `Comment`,
+          read: false,
+          postId: doc.id
+        });
+      }
+    })
+    .then(() => {
+      return;
+    })
+    .catch(err => {
+      console.error(err);
+      return;
+    });
+  });

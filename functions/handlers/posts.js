@@ -81,6 +81,30 @@ exports.getPost = (req, res) => {
     });
 };
 
+// Delete a post
+exports.deletePost = (req, res) => {
+  const document = db.doc(`/Posts/${req.params.postId}`);
+  document.get()
+    .then(doc => {
+      if(!doc.exists) {
+        return res.status(404).json({ error: "Post not found"});
+      }
+      if (doc.data().username !== req.user.username) {
+        return res.status(403).json({error :"Unauthorized"});
+      } else {
+        return document.delete()
+      }
+
+    })
+    .then (() => {
+      res.json({ message: "Post deleted successfully"});
+    })
+    .catch(err => {
+      console.error(err);
+      return res.status(500).json({error: err.code});
+    })
+};
+
 // Comment on a post
 exports.commentOnPost = (req, res) => {
   if (req.body.body.trim() === "")
