@@ -16,6 +16,7 @@ export class NavBar extends Component {
                 <Button component={Link} to="/"><img src={AppLogo} alt="logo" width='100' /></Button> 
                 <Button component={Link} to="/login">Login</Button> 
                 <Button component={Link} to="/signup">Signup</Button> 
+                <Button component={Link} to="/calendar">Calendar</Button> 
                 </ToolBar>
             </AppBar>
         )
