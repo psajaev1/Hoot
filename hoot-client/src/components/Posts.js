@@ -8,6 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import Link from "react-router-dom/Link";
 import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime'
+import defaultLogo from '../../src/images/default.png'
 
 const styles = {
   card: {
@@ -38,6 +39,8 @@ export class Posts extends Component {
           title="Profile pic"
           style={styles.image}
         />
+        <img src={defaultLogo} alt="logo" width='100' height='150' style="border:3px solid black" />
+
         <CardContent className={classes.content}>
           <Typography
             variant="h5"
