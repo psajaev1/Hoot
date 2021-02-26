@@ -39,7 +39,7 @@ export class Posts extends Component {
           title="Profile pic"
           style={styles.image}
         />
-        <img src={defaultLogo} alt="logo" width='100' height='150' style="border:3px solid black" />
+        <img src={defaultLogo} alt="logo" width='100' height='150'/>
 
         <CardContent className={classes.content}>
           <Typography

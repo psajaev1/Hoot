@@ -32,25 +32,26 @@ export class home extends Component {
     );
 
     return (
-      <div style={{ backgroundColor: "#cceeff", width: "1000px", minHeight: "2000px", margin: "100px"}}>
-      <img 
+      <div style={{ backgroundColor: "#cceeff", width: "1000px", minHeight: "1020px", margin: "100px"}}>
+       <img 
         src={networkLogo}
         alt="HTML5" 
-        style={{width: 260, height: 1000, position: 'absolute', top: 0, left: 1260}}/>
+        style={{width: 260, height: 1000, position: 'absolute', top: 75, left: 1260}}/>
 
-      <img 
+       <img 
         src={networkLogo}
         alt="HTML5" 
-        style={{width: 260, height: 1000, position: 'absolute', top: 0, left: 0}}/>
+        style={{width: 260, height: 1000, position: 'absolute', top:75, left: 0}}/>
       
       <Grid container spacing={10}>
-        <Grid item sm={4} xs={12}>
-            TODO: User Account Information
+        <Grid item sm={2} xs={6}>
+            {/* TODO: User Account Information */}
         </Grid>
         <Grid item sm={8} xs={12}>
           {showPosts}
         </Grid>
       </Grid>
+      </div>
     );
   }
 }
