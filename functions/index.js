@@ -57,6 +57,9 @@ app.post("/signup", signup);
 app.post("/user/image", FBAuth, uploadImage);
 app.post("/user", FBAuth, addUserDetails);
 
+// Calendar routes
+// app.get("checkAuth", checkAuth);
+
 exports.api = functions.https.onRequest(app);
 
 exports.createNotificationOnLike = functions.firestore
