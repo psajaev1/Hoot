@@ -2,9 +2,13 @@ import React from 'react';
 import dayjs from 'dayjs';
 
 import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import Snackbar from '@material-ui/core/Snackbar';
 
 import CalendarBody from './calendar-body';
 import CalendarHead from './calendar-head';
+
+import AddActivity from '../AddActivity';
 
 
 function Calendar(props) {
@@ -59,31 +63,52 @@ function Calendar(props) {
 
     const toggleMonthSelect = () => setShowMonthTable(!showMonthTable);
 
+    /*** ADDING AN ACTIVITY ***/
+    const [openSnackbar, setOpenSnackbar] = React.useState(false);
+    const [snackbarMsg, setSnackbarMsg] = React.useState(null);
+
     return (
         <Grid container spacing={3}>
-            <Grid item xs={12} md={8} lg={9}>
-                    <CalendarHead
-                        allMonths={allMonths}
-                        currentMonth={currentMonth}
-                        currentYear={currentYear}
-                        setMonth={setMonth}
-                        showMonthTable={showMonthTable}
-                        toggleMonthSelect={toggleMonthSelect}
-                    />
-                    <CalendarBody 
-                        firstDayOfMonth={firstDayOfMonth}
-                        daysInMonth={daysInMonth}
-                        currentDay={currentDay}
-                        currentMonth={currentMonth}
-                        currentMonthNum={currentMonthNum}
-                        selectedDay={selectedDay}
-                        // activeDays={activeDays}
-                        setSelectedDay={setSelectedDay}
-                        actualMonth={actualMonth}
-                        weekdays={weekdays}
-                    />
+           <Grid container spacing={3}>
+               <Grid item xs={12} md={8} lg={9}>
+                       <CalendarHead
+                           allMonths={allMonths}
+                           currentMonth={currentMonth}
+                           currentYear={currentYear}
+                           setMonth={setMonth}
+                           showMonthTable={showMonthTable}
+                           toggleMonthSelect={toggleMonthSelect}
+                       />
+                       <CalendarBody
+                           firstDayOfMonth={firstDayOfMonth}
+                           daysInMonth={daysInMonth}
+                           currentDay={currentDay}
+                           currentMonth={currentMonth}
+                           currentMonthNum={currentMonthNum}
+                           selectedDay={selectedDay}
+                           // activeDays={activeDays}
+                           setSelectedDay={setSelectedDay}
+                           actualMonth={actualMonth}
+                           weekdays={weekdays}
+                       />
+               </Grid>
+           </Grid>
+ 
+           <Grid item xs={12} md={4} lg={3}>
+               <Paper className="paper">
+                   <>
+                       <h3>Add activity on {selectedDay.day}-{selectedDay.month + 1} </h3>
+                       <AddActivity
+                           selectedDay={selectedDay}
+                           // authUser={props.authUser}
+                           setOpenSnackbar={setOpenSnackbar}
+                           setSnackbarMsg={setSnackbarMsg}
+                       />
+                   </>
+               </Paper>
             </Grid>
         </Grid>
+
     )
 
 };
