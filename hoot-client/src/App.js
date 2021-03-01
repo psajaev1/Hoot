@@ -3,6 +3,7 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import "./App.css";
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
+import axios from 'axios';
 
 import Navbar from "./components/NavBar";
 
@@ -11,6 +12,8 @@ import login from "./pages/login";
 import signup from "./pages/signup";
 import calendar from "./pages/Calendar";
 import match from "./pages/match"
+
+axios.default.baseURL = 'https://us-central1-senior-design-a1e06.cloudfunctions.net/api';
 
 const theme = createMuiTheme({
   palette: {
