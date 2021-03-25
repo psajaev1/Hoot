@@ -1,40 +1,31 @@
 const { db } = require("../util/admin");
-const firebaseConfig = require("../util/config");
+// const firebaseConfig = require("../util/config");
 
-const firebase = require("firebase");
+// const firebase = require("firebase");
 // const { json } = require("express");
 // firebase.initializeApp(firebaseConfig);
- 
-//checks if user is logged in
-exports.checkAuth = (req, res) => {
- 
-   var user = firebase.auth().currentUser;
-   return user;
- 
-   // firebase
-   //   .auth()
-   //   .onAuthStateChanged(function(authUser) {
-   //       if (authUser) {
-   //         return authUser;
-   //       } else {
-   //         return null;
-   //       }
-   //   });
-    // firebase
-   //   .auth()
-   //   .signInWithEmailAndPassword(user.email, user.password)
-   //   .then((data) => {
-   //     return data.user.getIdToken();
-   //   })
-   //   .then((token) => {
-   //     return res.json({ token });
-   //   })
-   //   .catch((err) => {
-   //     console.error(err);
-   //     if (err.code === "auth/wrong-password") {
-   //       return res
-   //         .status(403)
-   //         .json({ general: "Incorrect credentials, please try again" });
-   //     } else return res.status(500).json({ error: err.code });
-   //   });
- };
+
+exports.addActivity = (req, res) => {
+  const newActivity = {
+    name: req.body.name,
+    date: req.body.date,
+  };
+  console.log(newActivity);
+  const username = req.user.username;
+  console.log(username);
+
+  db.doc(`Users/${username}`)
+    .collection("Activities")
+    .add(newActivity)
+    .then((doc) => {
+      console.log("Activity document written with ID: ", doc.id);
+      const resActivity = newActivity;
+      resActivity.activityId = doc.id;
+      return res.json({ resActivity });
+      // return res.json({ db.doc(`/Users/${username}`).userId })
+    })
+    .catch((err) => {
+      console.error("Error adding activity document: ", err);
+      res.status(500).json({ error: "Error adding activity document"});
+    })
+};

@@ -97,7 +97,7 @@ function Calendar(props) {
            <Grid item xs={12} md={4} lg={3}>
                <Paper className="paper">
                    <>
-                       <h3>Add activity on {selectedDay.day}-{selectedDay.month + 1} </h3>
+                       {/* <h3>Add activity on {selectedDay.day}-{selectedDay.month + 1} </h3> */}
                        <AddActivity
                            selectedDay={selectedDay}
                            // authUser={props.authUser}

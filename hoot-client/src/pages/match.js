@@ -66,7 +66,7 @@ class match extends Component {
         axios
             .post("/match", newUserData)
             .then((res) => {
-                localStorage.setItem("FBIdToken", "Bearer ${res.data.token}");
+                localStorage.setItem("FBIdToken", `Bearer ${res.data.token}`);
                 this.setState({
                     loading: false,
                 });

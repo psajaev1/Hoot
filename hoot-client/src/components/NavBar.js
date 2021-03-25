@@ -7,7 +7,6 @@ import ToolBar from '@material-ui/core/ToolBar'
 import Button from '@material-ui/core/Button'
 
 
-
 export class NavBar extends Component {
     render() {
         return (
