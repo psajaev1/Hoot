@@ -31,6 +31,10 @@ const {
   uploadImage,
   addUserDetails,
 } = require("./handlers/login");
+const { 
+  addActivity
+} = require("./handlers/calendar");
+// const addActivity = require("./handlers/calendar");
 
 // Users routes
 app.get("/users", getAllUsers);
@@ -54,14 +58,14 @@ app.get("/post/:postId/like", FBAuth, likePost);
 app.get("/post/:postId/unlike", FBAuth, unlikePost);
 app.post("/post/:postId/comment", FBAuth, commentOnPost);
 
+// Calendar routes
+app.post('/addActivity', FBAuth, addActivity);
+
 // Login routes
 app.post("/login", login);
 app.post("/signup", signup);
 app.post("/user/image", FBAuth, uploadImage);
 app.post("/user", FBAuth, addUserDetails);
-
-// Calendar routes
-// app.get("checkAuth", checkAuth);
 
 exports.api = functions.https.onRequest(app);
 

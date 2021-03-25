@@ -5,11 +5,13 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Slider from '@material-ui/core/Slider';
-import Typography from '@material-ui/core/Typography';
+import PropTypes from "prop-types";
+
+// Redux stuff
+import { connect } from 'react-redux';
+import { addUserActivity } from '../redux/actions/userActions';
 
 const useStyles = makeStyles(theme => ({
     formControl: {
@@ -23,27 +25,25 @@ const useStyles = makeStyles(theme => ({
 function AddActivity(props) {
     const classes = useStyles();
 
-    const {
-        // authUser, firebase, 
-        selectedDay, setOpenSnackbar, setSnackbarMsg} = props;
+    const { selectedDay } = props;
     // const uid = authUser.uid;
 
     // Set query date for updating database
     selectedDay.year = new Date().getFullYear();
-    let queryDate = `${selectedDay.day}-${selectedDay.month}-${selectedDay.year}`;
+    let queryDate = `${selectedDay.month + 1}-${selectedDay.day}-${selectedDay.year}`;
 
     // Set default activity object
     const defaultActivity = {
         name: '',
-        type: 1,
+        // type: 1,
         duration: 60,
         date: queryDate
     }
 
     const [activity, setActivity] = useState(defaultActivity);
 
-    const handleChange = e => {
-        const { name, value } = e.target
+    const handleChange = event => {
+        const { name, value } = event.target
         setActivity({
             ...activity, 
             date: queryDate,
@@ -58,7 +58,17 @@ function AddActivity(props) {
     const isValid = activity.name === '';
 
     // Add the activity to firebase via the API made in this app
-    const handleSubmit = () => {
+    const handleSubmit = (event) => {
+        // get user from Redux, create activity object from info from this class,
+        // then call axios post route with newActivity object to send to FB
+
+        event.preventDefault();
+        const newActivity = {
+            name: activity.name,
+            date: activity.date,
+        };
+        props.addUserActivity(newActivity);
+
         // if (authUser) {
         //     firebase.addActivity(uid, activity);
         //     setActivity(defaultActivity);
@@ -73,6 +83,7 @@ function AddActivity(props) {
 
     return (
         <form noValidate onSubmit={e => e.preventDefault()}>
+            <h3>Add activity on {selectedDay.month + 1}-{selectedDay.day} </h3>
             <FormControl className={classes.formControl}>
                 <TextField
                     style={{marginTop: '5px'}}
@@ -123,7 +134,7 @@ function AddActivity(props) {
                 fullWidth
                 variant="contained"
                 color="primary"
-                // onClick={handleSubmit}
+                onClick={handleSubmit}
                 disabled={isValid}
             >
             Add activity
@@ -132,5 +143,18 @@ function AddActivity(props) {
     )
 };
 
-export default AddActivity;
+AddActivity.propTypes = {
+    addUserActivity: PropTypes.func.isRequired,
+}
+  
+const mapStateToProps = (state) => ({
+    user: state.user,
+});
+
+const mapActionsToProps = {
+    addUserActivity
+};
+
+export default connect(mapStateToProps, mapActionsToProps)(AddActivity);
+// export default AddActivity;
 // export default withFirebase(AddActivity);
