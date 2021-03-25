@@ -5,26 +5,68 @@ import {
     LOADING_UI,
     SET_UNAUTHENTICATED,
     LOADING_USER,
-    MARK_NOTIFICATIONS_READ
+    SET_TODAYS_ACTIVITIES,
+    SET_ACTIVE_DAYS,
 } from '../types';
 import axios from 'axios';
 
-export const addUserActivity = (activity, history) => (dispatch) => {
-    // dispatch()
-    console.log(activity);
-    console.log(typeof(activity));
+export const getActiveDays = () => (dispatch) => {
+    return axios
+    .get('getActiveDays')
+    .then((response) => {
+        // console.log('active days response data: ', response.data);
+        dispatch({ 
+            type: SET_ACTIVE_DAYS,
+            payload: response.data
+        });
+        dispatch({ type: CLEAR_ERRORS });
+        return response.data;
+    })
+    .catch((err) => {
+        console.log('sad');
+        console.log(err.response);
+        dispatch({
+            type: SET_ERRORS,
+            payload: err.response
+        });
+    });
+}
+
+export const getTodaysActivities = (date) => (dispatch) => {
+    return axios
+    .get(`/getTodaysActivities/${date}`)
+    .then((response) => {
+        // console.log('todays activities response data: ', response.data);
+        dispatch({ 
+            type: SET_TODAYS_ACTIVITIES,
+            payload: response.data
+        });
+        dispatch({ type: CLEAR_ERRORS });
+        return response.data;
+    })
+    .catch((err) => {
+        console.log('sad');
+        console.log(err.response);
+        dispatch({
+            type: SET_ERRORS,
+            payload: err.response
+        });
+    });
+}
+
+export const addUserActivity = (activity) => (dispatch) => {
+    // console.log(activity);
+    const dateStr = activity.date;
     axios
     .post('/addActivity', activity)
     .then(() => {
-        // setAuthorizationHeader(res.data.token);
-        dispatch(getUserData());
+        dispatch(getTodaysActivities(dateStr));
+        dispatch(getActiveDays());
         dispatch({ type: CLEAR_ERRORS });
-        // history.push('/calendar')
     })
     .catch((err) => {
         console.log("sad");
         console.log(err);
-        // console.log(err.response);
         dispatch({
             type: SET_ERRORS,
             payload: err

@@ -1,19 +1,25 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Snackbar from '@material-ui/core/Snackbar';
 
 import CalendarBody from './calendar-body';
 import CalendarHead from './calendar-head';
 
 import AddActivity from '../AddActivity';
+import ActivityList from '../ActivityList';
 
+import PropTypes from "prop-types";
+
+// Redux stuff
+import { connect } from 'react-redux';
+import { getTodaysActivities, getActiveDays } from '../../redux/actions/userActions';
 
 function Calendar(props) {
 
     // const {firebase, authUser} = props;
+    const { activitiesProp, activeDaysProp } = props;
 
     const defaultSelectedDay = {
         day: dayjs().format("D"),
@@ -63,9 +69,39 @@ function Calendar(props) {
 
     const toggleMonthSelect = () => setShowMonthTable(!showMonthTable);
 
-    /*** ADDING AN ACTIVITY ***/
-    const [openSnackbar, setOpenSnackbar] = React.useState(false);
-    const [snackbarMsg, setSnackbarMsg] = React.useState(null);
+
+    /*** ACTIVITY LIST ***/
+    const [activities, setActivities] = useState([]);
+    const [activeDays, setActiveDays] = useState([]);
+
+    const retrieveData = () => {
+        let date = `${selectedDay.month + 1}-${selectedDay.day}-${selectedDay.year}`;
+
+        const activitiesPromise = props.getTodaysActivities(date);
+        // activitiesPromise.then((data) => {
+        //     console.log('activity data: ', data);
+        //     setActivities(activities);
+        // })
+        // console.log('activity data: ', activities);
+        // // setActivities(activitiesProp);
+        // setActivities(activities);
+
+        retrieveActiveDays();
+    };
+
+    const retrieveActiveDays = () => {
+        const activeDaysPromise = props.getActiveDays();
+        // activeDaysPromise.then((data) => {
+        //     console.log('active day data: ', data);
+        //     setActiveDays(data);
+        // })
+        // console.log('active day data: ', actDays);
+        // console.log(typeof(actDays));
+        // // setActiveDays(activeDaysProp);
+        // setActiveDays(actDays);
+    };
+
+    useEffect(() => retrieveData(), [selectedDay]);
 
     return (
         <Grid container spacing={3}>
@@ -86,7 +122,7 @@ function Calendar(props) {
                            currentMonth={currentMonth}
                            currentMonthNum={currentMonthNum}
                            selectedDay={selectedDay}
-                           // activeDays={activeDays}
+                        //    activeDays={activeDays}
                            setSelectedDay={setSelectedDay}
                            actualMonth={actualMonth}
                            weekdays={weekdays}
@@ -100,12 +136,18 @@ function Calendar(props) {
                        {/* <h3>Add activity on {selectedDay.day}-{selectedDay.month + 1} </h3> */}
                        <AddActivity
                            selectedDay={selectedDay}
-                           // authUser={props.authUser}
-                           setOpenSnackbar={setOpenSnackbar}
-                           setSnackbarMsg={setSnackbarMsg}
                        />
                    </>
                </Paper>
+            </Grid>
+
+            <Grid item xs={12} md={7}>
+                <Paper className="paper">
+                <h3>Activities on {selectedDay.month + 1}-{selectedDay.day}</h3>
+                <ActivityList
+                    // activities={activities}
+                />
+                </Paper>
             </Grid>
         </Grid>
 
@@ -113,4 +155,20 @@ function Calendar(props) {
 
 };
 
-export default Calendar;
+Calendar.propTypes = {
+    getTodaysActivities: PropTypes.func.isRequired,
+    getActiveDays: PropTypes.func.isRequired,
+    user: PropTypes.object
+}
+
+const mapStateToProps = (state) => ({
+    todaysActivities: state.user.todaysActivities,
+    activeDaysProp: state.user.activeDays,
+});
+
+const mapActionsToProps = {
+    getTodaysActivities,
+    getActiveDays
+};
+
+export default connect(mapStateToProps, mapActionsToProps)(Calendar);
