@@ -44,34 +44,40 @@ function ActivityList(props) {
                             <TableHead>
                                 <TableRow>
                                     <TableCell>Name</TableCell>
-                                    {/* <TableCell>Type</TableCell> */}
+                                    <TableCell>Time</TableCell>
                                     <TableCell>Duration</TableCell>
-                                    {/* <TableCell>Actions</TableCell> */}
+                                    <TableCell>Actions</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                             {
                                 Object.values(activities).map((activity, i) => {
-                                    // let {name, type, duration} = activity;
-                                    let {name} = activity;
-                                    let duration = 60;
-                                    // switch(activity.type) {
-                                    //     case 1:
-                                    //         type = "Lifting weights";
-                                    //         break;
-                                    //     case 2:
-                                    //         type = "Running";
-                                    //         break;
-                                    //     case 3:
-                                    //         type = "Cycling";
-                                    //         break;
-                                    //     default:
-                                    //         type = "Not set";
-                                    // };
+                                    let { name, time, duration } = activity;
+                                    let hour = parseInt(time.substring(0, 2));
+                                    if (hour < 12) {
+                                        if (hour === 0) {
+                                            time = time.substring(2);
+                                            time = '12' + time;
+                                        }
+                                        time += ' am';
+                                    } else if (hour === 12) {
+                                        time += ' pm';
+                                    } else {
+                                        hour -= 12;
+                                        let hourStr = hour.toString();
+                                        if (hourStr.length < 2) {
+                                            hourStr = '0' + hourStr;
+                                        }
+
+                                        time = time.substring(2);
+                                        time = hourStr + time;
+                                        time += ' pm';
+                                    }
+
                                     return (
                                         <TableRow key={i}>
                                             <TableCell>{name}</TableCell>
-                                            {/* <TableCell>{type}</TableCell> */}
+                                            <TableCell>{time}</TableCell>
                                             <TableCell>{duration}</TableCell>
                                             <TableCell>
                                                 <DeleteIcon 
