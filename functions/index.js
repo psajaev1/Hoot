@@ -32,9 +32,10 @@ const {
   addUserDetails,
 } = require("./handlers/login");
 const { 
-  addActivity
+  addActivity,
+  getTodaysActivities,
+  getActiveDays,
 } = require("./handlers/calendar");
-// const addActivity = require("./handlers/calendar");
 
 // Users routes
 app.get("/users", getAllUsers);
@@ -60,6 +61,8 @@ app.post("/post/:postId/comment", FBAuth, commentOnPost);
 
 // Calendar routes
 app.post('/addActivity', FBAuth, addActivity);
+app.get('/getTodaysActivities/:date', FBAuth, getTodaysActivities);
+app.get('/getActiveDays', FBAuth, getActiveDays);
 
 // Login routes
 app.post("/login", login);

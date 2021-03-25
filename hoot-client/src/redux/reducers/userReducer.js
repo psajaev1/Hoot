@@ -6,12 +6,16 @@ import {
 //   LIKE_SCREAM,
 //   UNLIKE_SCREAM,
 //   MARK_NOTIFICATIONS_READ
+  SET_TODAYS_ACTIVITIES,
+  SET_ACTIVE_DAYS,
 } from '../types';
 
 const initialState = {
   authenticated: false,
   loading: false,
   credentials: {},
+  todaysActivities:[],
+  activeDays: [],
 };
 
 export default function userReducer(state = initialState, action) {
@@ -33,6 +37,16 @@ export default function userReducer(state = initialState, action) {
       return {
         ...state,
         loading: true
+      };
+    case SET_TODAYS_ACTIVITIES:
+      return {
+        ...state,
+        todaysActivities: action.payload
+      };
+    case SET_ACTIVE_DAYS:
+      return {
+        ...state,
+        activeDays: action.payload
       };
     // case LIKE_SCREAM:
     //   return {

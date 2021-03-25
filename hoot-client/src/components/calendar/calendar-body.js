@@ -10,17 +10,25 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
+// Redux stuff
+import { connect } from 'react-redux';
+import PropTypes from "prop-types";
+
 const CalendarBody = props => {
 
-    const { firstDayOfMonth, daysInMonth, currentDay, currentMonth, currentMonthNum, selectedDay, 
-        // activeDays, 
-        setSelectedDay, actualMonth, weekdays } = props;
+    const { firstDayOfMonth, daysInMonth, currentDay, currentMonth, currentMonthNum, 
+        selectedDay, activeDays, setSelectedDay, actualMonth, weekdays } = props;
+    console.log('the components active days: ', activeDays);
 
     let blanks = [];
     for (let i = 0; i < firstDayOfMonth(); i++) {
         blanks.push(
             <TableCell key={nextId()}>{""}</TableCell>
         )
+    }
+
+    if (activeDays === undefined) {
+        console.log('activeDays is undefined in calendar-body :(');
     }
 
     let monthDays = [];
@@ -32,6 +40,24 @@ const CalendarBody = props => {
 
         // Check if day is selected day
         if (selectedDay.day === d && currentMonthNum() === selectedDay.month ) selectDay = "selected-day";
+
+        let stringDate = `${currentMonthNum() + 1}-${d}-${selectedDay.year}`;
+        
+        if (activeDays !== undefined) {
+            let included = false;
+            for(let i = 0; i < activeDays.length; i++) {
+                if (activeDays[i].date === stringDate) {
+                    included = true;
+                    break;
+                }
+            }
+            if (included) {
+                activeDay = 'active';
+            } else {
+                activeDay = ''
+            }
+
+        }
 
         monthDays.push(
             <TableCell 
@@ -90,4 +116,17 @@ const CalendarBody = props => {
     )
 }
 
-export default CalendarBody;
+CalendarBody.propTypes = {
+    user: PropTypes.object
+}
+  
+const mapStateToProps = (state) => ({
+    activeDays: state.user.activeDays,
+});
+
+const mapActionsToProps = {
+    
+};
+
+// export default CalendarBody;
+export default connect(mapStateToProps, mapActionsToProps)(CalendarBody);

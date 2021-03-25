@@ -29,3 +29,58 @@ exports.addActivity = (req, res) => {
       res.status(500).json({ error: "Error adding activity document"});
     })
 };
+
+exports.getTodaysActivities = (req, res) => {
+  console.log(req.params);
+  const username = req.user.username;
+  console.log(username);
+
+  db.doc(`Users/${username}`)
+    .collection("Activities")
+    .where('date', '==', req.params.date)
+    .get()
+    .then((data) => {
+      let activities = [];
+      data.forEach((doc) => {
+        console.log(doc.id, ' => ', doc.data());
+        activities.push({
+          name: doc.data().name,
+          date: doc.data().date,
+        });
+      });
+      return res.json(activities);
+    })
+    .catch((err) => {
+      console.log('Error gettind activity documents: ', err);
+    });
+};
+
+exports.getActiveDays = (req, res) => {
+  const username = req.user.username;
+
+  db.doc(`Users/${username}`)
+    .collection("Activities")
+    .get()
+    .then((data) => {
+      let dates = [];
+      data.forEach((doc) => {
+        let included = false;
+        for(let i = 0; i < dates.length; i++) {
+          if (dates[i].date == doc.data().date) {
+            included = true;
+            break;
+          }
+        }
+        if (!included) {
+          dates.push({
+            date: doc.data().date,
+          });
+        }
+      });
+      console.log(dates);
+      return res.json(dates);
+    })
+    .catch((err) => {
+      console.log('Error getting active days: ', err);
+    });
+}
