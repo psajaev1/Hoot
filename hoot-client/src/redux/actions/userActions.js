@@ -19,6 +19,7 @@ export const getAllUsernames = () => (dispatch) => {
         for (let i = 0; i < response.data.length; i++) {
             usernames.push(response.data[i].username)
         }
+        usernames.sort();
         console.log('all usernames response data: ', usernames);
         // console.log(Array.isArray(usernames));
         dispatch({ 
@@ -26,7 +27,7 @@ export const getAllUsernames = () => (dispatch) => {
             payload: usernames
         });
         dispatch({ type: CLEAR_ERRORS });
-        return usernames;
+        // return usernames;
     })
     .catch((err) => {
         console.log('sad');
