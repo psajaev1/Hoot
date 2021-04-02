@@ -9,6 +9,7 @@ import {
     SET_TODAYS_ACTIVITIES,
     SET_ACTIVE_DAYS,
     SET_ALL_USERS,
+    SET_ALL_POSTS,
 } from '../types';
 import axios from 'axios';
 import firebase from 'firebase/app';
@@ -41,6 +42,32 @@ export const getAllUsernames = () => (dispatch) => {
             payload: err.response
         });
     });
+}
+
+export const getAllPosts= () => (dispatch) => {
+    return axios
+        .get('/posts')
+        .then((response) => {
+            const posts = [];
+            for (let i = 0; i < response.data.length; i++) {
+                posts.push(response.data[i])
+            }
+            posts.sort();
+            console.log('all posts response data: ', posts);
+            dispatch({ 
+                type: SET_ALL_POSTS, 
+                payload: posts });
+            dispatch({ type: CLEAR_ERRORS });
+            // return usernames;
+        })
+        .catch((err) => {
+            console.log('sad');
+            console.log(err.response);
+            dispatch({
+                type: SET_ERRORS,
+                payload: err.response
+            });
+        });
 }
 
 export const getActiveDays = () => (dispatch) => {
@@ -155,6 +182,9 @@ export const loginUser = (userData, history) => (dispatch) => {
     axios
         .post('/login', userData)
         .then((res) => {
+            console.log("eppepepepepepee");
+            console.log(res);
+            console.log(res.data.token);
             setAuthorizationHeader(res.data.token);
             dispatch(getUserData());
             dispatch({ type: CLEAR_ERRORS });

@@ -12,6 +12,8 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import networkLogo from '../images/Networks.jpg'
+
 
 const styles = {
   form: {
@@ -89,6 +91,18 @@ class match extends Component {
         const { classes } = this.props;
         const { errors, loading } = this.state;
         return (
+
+<div style={{ backgroundColor: "#cceeff", width: "1000px", minHeight: "1020px", margin: "100px" }}>
+        <img
+          src={networkLogo}
+          alt="HTML5"
+          style={{ width: 260, height: 1000, position: 'absolute', top: 75, left: 1260 }} />
+
+        <img
+          src={networkLogo}
+          alt="HTML5"
+          style={{ width: 260, height: 1000, position: 'absolute', top: 75, left: 0 }} />
+
             <Grid container className={classes.form}>
                 <Grid item sm />
                 <Grid item sm>
@@ -189,6 +203,7 @@ class match extends Component {
                 <Grid item sm />
 
             </Grid>
+            </div>
         );
     }
 }
