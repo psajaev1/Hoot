@@ -9,6 +9,8 @@ exports.addActivity = (req, res) => {
   const newActivity = {
     name: req.body.name,
     date: req.body.date,
+    time: req.body.time,
+    duration: req.body.duration,
   };
   console.log(newActivity);
   const username = req.user.username;
@@ -22,7 +24,6 @@ exports.addActivity = (req, res) => {
       const resActivity = newActivity;
       resActivity.activityId = doc.id;
       return res.json({ resActivity });
-      // return res.json({ db.doc(`/Users/${username}`).userId })
     })
     .catch((err) => {
       console.error("Error adding activity document: ", err);
@@ -38,6 +39,7 @@ exports.getTodaysActivities = (req, res) => {
   db.doc(`Users/${username}`)
     .collection("Activities")
     .where('date', '==', req.params.date)
+    .orderBy('time')
     .get()
     .then((data) => {
       let activities = [];
@@ -46,12 +48,14 @@ exports.getTodaysActivities = (req, res) => {
         activities.push({
           name: doc.data().name,
           date: doc.data().date,
+          time: doc.data().time,
+          duration: doc.data().duration,
         });
       });
       return res.json(activities);
     })
     .catch((err) => {
-      console.log('Error gettind activity documents: ', err);
+      console.log('Error getting activity documents: ', err);
     });
 };
 

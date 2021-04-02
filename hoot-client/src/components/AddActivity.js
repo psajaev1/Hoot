@@ -7,7 +7,9 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import Slider from '@material-ui/core/Slider';
+import Typography from '@material-ui/core/Typography';
 import PropTypes from "prop-types";
+import TimePicker from 'react-time-picker';
 
 // Redux stuff
 import { connect } from 'react-redux';
@@ -26,7 +28,6 @@ function AddActivity(props) {
     const classes = useStyles();
 
     const { selectedDay } = props;
-    // const uid = authUser.uid;
 
     // Set query date for updating database
     selectedDay.year = new Date().getFullYear();
@@ -35,9 +36,9 @@ function AddActivity(props) {
     // Set default activity object
     const defaultActivity = {
         name: '',
-        // type: 1,
+        date: queryDate,
+        time: '09:00',
         duration: 60,
-        date: queryDate
     }
 
     const [activity, setActivity] = useState(defaultActivity);
@@ -50,10 +51,17 @@ function AddActivity(props) {
             [name]: value});
     }
 
-    // const handleSlider = e => {
-    //     const duration = e.target.getAttribute('aria-valuenow');
-    //     setActivity({...activity, duration: duration});
-    // }
+    const handleTimeValue = event => {
+        setActivity({
+            ...activity, 
+            date: queryDate,
+            time: event});
+    }
+
+    const handleSlider = e => {
+        const duration = e.target.getAttribute('aria-valuenow');
+        setActivity({...activity, duration: duration});
+    }
 
     const isValid = activity.name === '';
 
@@ -66,19 +74,10 @@ function AddActivity(props) {
         const newActivity = {
             name: activity.name,
             date: activity.date,
+            time: activity.time,
+            duration: activity.duration,
         };
         props.addUserActivity(newActivity);
-
-        // if (authUser) {
-        //     firebase.addActivity(uid, activity);
-        //     setActivity(defaultActivity);
-        //     // Show notification
-        //     setOpenSnackbar(true);
-        //     setSnackbarMsg('Added activity');
-        //     setTimeout(() => {
-        //         setOpenSnackbar(false)
-        //     }, 3000)
-        // }
     }
 
     return (
@@ -96,38 +95,27 @@ function AddActivity(props) {
                     name="name"
                     onChange={handleChange}
                 />
-                {/* <div style={{marginTop: '20px', marginBottom: '30px'}}>
-                    <Typography id="discrete-slider" gutterBottom>
-                        Type
-                    </Typography>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={activity.type}
-                        style={{minWidth: '100%'}}
-                        name="type"
-                        onChange={handleChange}
-                    >
-                        <MenuItem value={1}>Lifting Weights</MenuItem>
-                        <MenuItem value={2}>Running</MenuItem>
-                        <MenuItem value={3}>Cycling</MenuItem>
-                    </Select>
-                </div> */}
-                {/* <Typography id="discrete-slider" gutterBottom>
+                <TimePicker
+                    onChange={handleTimeValue}
+                    value={activity.time}
+                    name={"time"}
+                    disableClock
+                />
+                <Typography id="discrete-slider" gutterBottom>
                     Duration
                 </Typography>
                 <Slider
                     defaultValue={activity.duration}
                     aria-labelledby="discrete-slider"
                     valueLabelDisplay="auto"
-                    step={10}
+                    step={15}
                     marks
-                    min={10}
-                    max={120}
+                    min={15}
+                    max={180}
                     name="duration"
                     onChange={handleSlider}
                     style={{marginBottom: '20px'}}
-                /> */}
+                />
             </FormControl>
             <Button
                 type="submit"
