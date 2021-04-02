@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import Grid from "@material-ui/core/Grid";
+import networkLogo from '../images/Networks.jpg'
 
 import Link from "react-router-dom/Link";
 
@@ -96,6 +97,20 @@ class signup extends Component {
     const { classes, UI: { loading } } = this.props;
     const { errors } = this.state;
     return (
+
+      <div style={{ backgroundColor: "#cceeff", width: "1000px", minHeight: "1020px", margin: "100px" }}>
+      <img
+        src={networkLogo}
+        alt="HTML5"
+        style={{ width: 260, height: 1000, position: 'absolute', top: 75, left: 1260 }} />
+
+      <img
+        src={networkLogo}
+        alt="HTML5"
+        style={{ width: 260, height: 1000, position: 'absolute', top: 75, left: 0 }} />
+
+
+      
       <Grid container className={classes.form}>
         <Grid item sm />
         <Grid item sm>
@@ -178,6 +193,7 @@ class signup extends Component {
         <Grid item sm />
 
       </Grid>
+      </div>
     );
   }
 }
