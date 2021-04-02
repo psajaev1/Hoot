@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // import { withFirebase } from '../Firebase';
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -11,9 +11,14 @@ import Typography from '@material-ui/core/Typography';
 import PropTypes from "prop-types";
 import TimePicker from 'react-time-picker';
 
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import Input from '@material-ui/core/Input';
+import Chip from '@material-ui/core/Chip';
+
 // Redux stuff
 import { connect } from 'react-redux';
-import { addUserActivity } from '../redux/actions/userActions';
+import { addUserActivity, getAllUsernames } from '../redux/actions/userActions';
 
 const useStyles = makeStyles(theme => ({
     formControl: {
@@ -22,12 +27,47 @@ const useStyles = makeStyles(theme => ({
     selectEmpty: {
       marginTop: theme.spacing(2),
     },
+    chips: {
+        display: 'flex',
+        flexWrap: 'wrap',
+      },
+      chip: {
+        margin: 2,
+      },
+      noLabel: {
+        marginTop: theme.spacing(3),
+      },
 }));
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+function getStyles(name, personName, theme) {
+    return {
+      fontWeight:
+        personName.indexOf(name) === -1
+          ? theme.typography.fontWeightRegular
+          : theme.typography.fontWeightMedium,
+    };
+  }
 
 function AddActivity(props) {
     const classes = useStyles();
 
-    const { selectedDay } = props;
+    const theme = useTheme();
+
+    const { selectedDay, currUser } = props;
+    let { allUsers } = props;
+
+    allUsers = allUsers.filter(name => name !== currUser)
 
     // Set query date for updating database
     selectedDay.year = new Date().getFullYear();
@@ -39,9 +79,12 @@ function AddActivity(props) {
         date: queryDate,
         time: '09:00',
         duration: 60,
+        invites: [],
     }
 
     const [activity, setActivity] = useState(defaultActivity);
+    
+    useEffect(() => props.getAllUsernames(), []);
 
     const handleChange = event => {
         const { name, value } = event.target
@@ -63,6 +106,13 @@ function AddActivity(props) {
         setActivity({...activity, duration: duration});
     }
 
+    const handleInvites = event => {
+        setActivity({
+            ...activity, 
+            invites: event.target.value,
+        });
+    }
+
     const isValid = activity.name === '';
 
     // Add the activity to firebase via the API made in this app
@@ -70,14 +120,24 @@ function AddActivity(props) {
         // get user from Redux, create activity object from info from this class,
         // then call axios post route with newActivity object to send to FB
 
+        // console.log('submitted time and duration are: ' + activity.time + ', ' + activity.duration)
+        console.log('list of invites would have been: ');
+        console.log(activity.invites);
         event.preventDefault();
         const newActivity = {
             name: activity.name,
             date: activity.date,
             time: activity.time,
             duration: activity.duration,
+            invites: activity.invites,
         };
         props.addUserActivity(newActivity);
+
+        setActivity({
+            ...activity,
+            name: '',
+            invites: [],
+        });
     }
 
     return (
@@ -116,7 +176,35 @@ function AddActivity(props) {
                     onChange={handleSlider}
                     style={{marginBottom: '20px'}}
                 />
+
+                <Typography id="user-list" gutterBottom>
+                    Select Users to Invite Below
+                </Typography>
+                <Select
+                  labelId="mutiple-chip-label"
+                  id="mutiple-chip"
+                  aria-labelledby="user-list"
+                  multiple
+                  value={activity.invites}
+                  onChange={handleInvites}
+                  input={<Input id="select-multiple-chip" />}
+                  renderValue={(selected) => (
+                    <div className={classes.chips}>
+                      {selected.map((value) => (
+                        <Chip key={value} label={value} className={classes.chip} />
+                      ))}
+                    </div>
+                  )}
+                  MenuProps={MenuProps}
+                >
+                  {allUsers.map((name) => (
+                    <MenuItem key={name} value={name} style={getStyles(name, activity.invites, theme)}>
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
             </FormControl>
+
             <Button
                 type="submit"
                 fullWidth
@@ -136,11 +224,13 @@ AddActivity.propTypes = {
 }
   
 const mapStateToProps = (state) => ({
-    user: state.user,
+    currUser: state.user.credentials.username,
+    allUsers: state.data.allUsers,
 });
 
 const mapActionsToProps = {
-    addUserActivity
+    addUserActivity,
+    getAllUsernames,
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(AddActivity);

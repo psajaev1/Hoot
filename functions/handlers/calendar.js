@@ -1,9 +1,4 @@
 const { db } = require("../util/admin");
-// const firebaseConfig = require("../util/config");
-
-// const firebase = require("firebase");
-// const { json } = require("express");
-// firebase.initializeApp(firebaseConfig);
 
 exports.addActivity = (req, res) => {
   const newActivity = {
@@ -11,19 +6,34 @@ exports.addActivity = (req, res) => {
     date: req.body.date,
     time: req.body.time,
     duration: req.body.duration,
+    invites: req.body.invites,
+    owner: req.user.username,
   };
   console.log(newActivity);
   const username = req.user.username;
   console.log(username);
 
-  db.doc(`Users/${username}`)
+    for (let i = 0; i < newActivity.invites.length; i++) {
+      db.doc(`Users/${newActivity.invites[i]}`)
+        .collection("Activities")
+        .add(newActivity)
+        .catch((err) => {
+          console.error("Error adding activity document: ", err);
+          res.status(500).json({ error: "Error adding activity document"});
+        })
+    }
+
+    db.doc(`Users/${username}`)
     .collection("Activities")
     .add(newActivity)
     .then((doc) => {
+      doc.get().then((doc2) => {
+        console.log('doc data looks like: ')
+        console.log(doc2.data());
+      });
       console.log("Activity document written with ID: ", doc.id);
-      const resActivity = newActivity;
-      resActivity.activityId = doc.id;
-      return res.json({ resActivity });
+
+      return res.status(200).json({ newActivity });
     })
     .catch((err) => {
       console.error("Error adding activity document: ", err);
@@ -50,6 +60,8 @@ exports.getTodaysActivities = (req, res) => {
           date: doc.data().date,
           time: doc.data().time,
           duration: doc.data().duration,
+          invites: doc.data().invites,
+          owner: doc.data().owner,
         });
       });
       return res.json(activities);

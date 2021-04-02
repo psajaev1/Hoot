@@ -46,15 +46,19 @@ function ActivityList(props) {
                                     <TableCell>Name</TableCell>
                                     <TableCell>Time</TableCell>
                                     <TableCell>Duration</TableCell>
-                                    <TableCell>Actions</TableCell>
+                                    <TableCell>Owner</TableCell>
+                                    <TableCell>Invited</TableCell>
+                                    {/* <TableCell>Actions</TableCell> */}
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                             {
                                 Object.values(activities).map((activity, i) => {
-                                    let { name, time, duration } = activity;
-                                    if (time === undefined) time = '09:00';
-                                    if (duration === undefined) duration = '60';
+                                    let { name, time, duration, owner, invites } = activity;
+                                    invites.sort();
+                                    console.log("owner: " + owner);
+                                    if (time === undefined || time === null) time = '09:00';
+                                    if (duration === undefined || duration === null) duration = '60';
                                     
                                     let hour = parseInt(time.substring(0, 2));
                                     if (hour < 12) {
@@ -82,7 +86,17 @@ function ActivityList(props) {
                                             <TableCell>{name}</TableCell>
                                             <TableCell>{time}</TableCell>
                                             <TableCell>{duration}</TableCell>
+                                            <TableCell>{owner}</TableCell>
                                             <TableCell>
+                                                {invites.map((name, i) => {
+                                                    if (i === invites.length - 1) {
+                                                        return name;
+                                                    } else {
+                                                        return (name + ", ");
+                                                    }
+                                                })}
+                                            </TableCell>
+                                            {/* <TableCell>
                                                 <DeleteIcon 
                                                     // onClick={e => deleteActivity(i)}
                                                 />
@@ -90,7 +104,7 @@ function ActivityList(props) {
                                                     // onClick={e => editActivity(activity, i)}
                                                     style={{marginLeft:"20px"}}
                                                 />
-                                            </TableCell>
+                                            </TableCell> */}
                                         </TableRow>
                                     );
                                 })
