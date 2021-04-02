@@ -11,10 +11,10 @@ export class NavBar extends Component {
     render() {
         return (
             <AppBar>
-                <ToolBar className="toolbar-container">
-                <Button component={Link} to="/"><img src={AppLogo} alt="logo" width='100' /></Button> 
+                <ToolBar className="toolbar-container" padding="2">
                 <Button component={Link} to="/login">Login</Button> 
-                <Button component={Link} to="/signup">Signup</Button> 
+                <Button component={Link} to="/signup">Signup</Button>
+                <Button component={Link} to="/"><img src={AppLogo} alt="logo" width='120' /></Button> 
                 <Button component={Link} to="/calendar">Calendar</Button>
                 <Button component={Link} to="/match">Find a Mentor</Button> 
                 </ToolBar>

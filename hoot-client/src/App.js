@@ -22,7 +22,7 @@ import signup from "./pages/signup";
 import calendar from "./pages/Calendar";
 import match from "./pages/match"
 
-axios.default.baseURL = 'https://senior-design-a1e06-default-rtdb.firebaseio.com/';
+axios.default.baseURL = 'https://us-central1-senior-design-a1e06.cloudfunctions.net/api';
 
 const theme = createMuiTheme({
   palette: {
@@ -39,18 +39,28 @@ const theme = createMuiTheme({
   },
 });
 
-// const token = localStorage.FBIdToken;
-// if (token) {
-//   const decodedToken = jwtDecode(token);
-//   // if (decodedToken.exp * 1000 < Date.now()) {
-//   //   store.dispatch(logoutUser());
-//   //   window.location.href = '/login';
-//   // } else {
-//     store.dispatch({ type: SET_AUTHENTICATED });
-//     axios.defaults.headers.common['Authorization'] = token;
-//     store.dispatch(getUserData());
-//   //}
-// }
+const token = localStorage.FBIdToken;
+
+try {
+
+  if (token) {
+    const decodedToken = jwtDecode(token);
+    if (decodedToken.exp * 1000 < Date.now()) {
+      store.dispatch(logoutUser());
+      window.location.href = '/login';
+    } else {
+      store.dispatch({ type: SET_AUTHENTICATED });
+      axios.defaults.headers.common['Authorization'] = token;
+      store.dispatch(getUserData());
+    }
+  }
+
+
+} catch (Exception) {
+  console.log("error");
+};
+
+
 
 function App() {
   return (
@@ -61,13 +71,13 @@ function App() {
             <Navbar />
             <div className="container">
               <Switch>
-                <Route exact path="/" component={home} />
+                <AuthRoute exact path="/" component={home} />
                 <Route exact path="/login" component={login} />
                 <Route exact path="/signup" component={signup} />
-                <AuthRoute exact path="/calendar" component={calendar} 
+                <AuthRoute exact path="/calendar" component={calendar}
                 // authenticated={authenticated} 
                 />
-                <Route exact path="/match" component={match} />
+                <AuthRoute exact path="/match" component={match} />
               </Switch>
             </div>
           </BrowserRouter>
