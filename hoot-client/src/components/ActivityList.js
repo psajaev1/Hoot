@@ -53,6 +53,9 @@ function ActivityList(props) {
                             {
                                 Object.values(activities).map((activity, i) => {
                                     let { name, time, duration } = activity;
+                                    if (time === undefined) time = '09:00';
+                                    if (duration === undefined) duration = '60';
+                                    
                                     let hour = parseInt(time.substring(0, 2));
                                     if (hour < 12) {
                                         if (hour === 0) {
