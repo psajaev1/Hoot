@@ -11,9 +11,16 @@ import Typography from '@material-ui/core/Typography';
 import PropTypes from "prop-types";
 import TimePicker from 'react-time-picker';
 
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import Input from '@material-ui/core/Input';
+import Chip from '@material-ui/core/Chip';
+
 // Redux stuff
 import { connect } from 'react-redux';
 import { addUserActivity } from '../redux/actions/userActions';
+import UsersDropdown from './UsersDropdown';
 
 const useStyles = makeStyles(theme => ({
     formControl: {
@@ -43,6 +50,25 @@ function AddActivity(props) {
 
     const [activity, setActivity] = useState(defaultActivity);
 
+    // const allUsernames = props.getAllUsernames();
+
+    // const [personName, setPersonName] = React.useState([]);
+
+    // const handlePersonChange = (event) => {
+    //     setPersonName(event.target.value);
+    // };
+
+    // const handlePersonChangeMultiple = (event) => {
+    //     const { options } = event.target;
+    //     const value = [];
+    //     for (let i = 0, l = options.length; i < l; i += 1) {
+    //         if (options[i].selected) {
+    //             value.push(options[i].value);
+    //         }
+    //     }
+    //     setPersonName(value);
+    // };
+
     const handleChange = event => {
         const { name, value } = event.target
         setActivity({
@@ -70,6 +96,7 @@ function AddActivity(props) {
         // get user from Redux, create activity object from info from this class,
         // then call axios post route with newActivity object to send to FB
 
+        // console.log('submitted time and duration are: ' + activity.time + ', ' + activity.duration)
         event.preventDefault();
         const newActivity = {
             name: activity.name,
@@ -117,6 +144,11 @@ function AddActivity(props) {
                     style={{marginBottom: '20px'}}
                 />
             </FormControl>
+
+            {/* <UsersDropdown>
+
+            </UsersDropdown> */}
+
             <Button
                 type="submit"
                 fullWidth
@@ -140,7 +172,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapActionsToProps = {
-    addUserActivity
+    addUserActivity,
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(AddActivity);

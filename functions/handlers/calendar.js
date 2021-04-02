@@ -20,6 +20,10 @@ exports.addActivity = (req, res) => {
     .collection("Activities")
     .add(newActivity)
     .then((doc) => {
+      doc.get().then((doc2) => {
+        console.log('doc data looks like: ')
+        console.log(doc2.data());
+      });
       console.log("Activity document written with ID: ", doc.id);
       const resActivity = newActivity;
       resActivity.activityId = doc.id;

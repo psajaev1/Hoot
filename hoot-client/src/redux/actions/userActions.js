@@ -7,12 +7,40 @@ import {
     LOADING_USER,
     SET_TODAYS_ACTIVITIES,
     SET_ACTIVE_DAYS,
+    SET_ALL_USERS,
 } from '../types';
 import axios from 'axios';
 
+export const getAllUsernames = () => (dispatch) => {
+    return axios
+    .get('/users')
+    .then((response) => {
+        const usernames = [];
+        for (let i = 0; i < response.data.length; i++) {
+            usernames.push(response.data[i].username)
+        }
+        console.log('all usernames response data: ', usernames);
+        // console.log(Array.isArray(usernames));
+        dispatch({ 
+            type: SET_ALL_USERS,
+            payload: usernames
+        });
+        dispatch({ type: CLEAR_ERRORS });
+        return usernames;
+    })
+    .catch((err) => {
+        console.log('sad');
+        console.log(err.response);
+        dispatch({
+            type: SET_ERRORS,
+            payload: err.response
+        });
+    });
+}
+
 export const getActiveDays = () => (dispatch) => {
     return axios
-    .get('getActiveDays')
+    .get('/getActiveDays')
     .then((response) => {
         // console.log('active days response data: ', response.data);
         dispatch({ 
@@ -55,11 +83,13 @@ export const getTodaysActivities = (date) => (dispatch) => {
 }
 
 export const addUserActivity = (activity) => (dispatch) => {
-    // console.log(activity);
+    console.log('adding activity: ');
+    console.log(activity);
     const dateStr = activity.date;
     axios
     .post('/addActivity', activity)
-    .then(() => {
+    .then((res) => {
+        console.log(res.data);
         dispatch(getTodaysActivities(dateStr));
         dispatch(getActiveDays());
         dispatch({ type: CLEAR_ERRORS });
@@ -121,6 +151,7 @@ export const signupUser = (newUserData, history) => (dispatch) => {
     .then((res) => {
         setAuthorizationHeader(res.data.token);
         dispatch(getUserData());
+        // maybe add dispatch(getAllUsers())?
         dispatch({ type: CLEAR_ERRORS });
         history.push('/');
     })
