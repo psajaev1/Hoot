@@ -1,11 +1,9 @@
 import {
     SET_ALL_USERS,
-    SET_ALL_POSTS
   } from '../types';
   
   const initialState = {
     allUsers: [],
-    allPosts: [],
   };
   
   export default function dataReducer(state = initialState, action) {
@@ -14,11 +12,6 @@ import {
         return {
           ...state,
           allUsers: action.payload
-        };
-      case SET_ALL_POSTS:
-        return {
-          ...state,
-          allPosts: action.payload
         };
       default:
         return state;

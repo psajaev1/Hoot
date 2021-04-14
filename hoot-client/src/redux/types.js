@@ -14,4 +14,3 @@ export const LOADING_DATA = 'LOADING_DATA';
 export const STOP_LOADING_UI = 'STOP_LOADING_UI';
 // Data reducer types
 export const SET_ALL_USERS = 'SET_ALL_USERS';
-export const SET_ALL_POSTS = 'SET_ALL_POSTS';

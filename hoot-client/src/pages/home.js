@@ -14,11 +14,9 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { createPost } from '../redux/actions/userActions';
-import { getAllPosts } from '../redux/actions/userActions';
 import defaultLogo from '../../src/images/default.png';
 import Typography from "@material-ui/core/Typography";
 import CardMedia from "@material-ui/core/CardMedia";
-
 
 
 
@@ -51,11 +49,14 @@ const styles = {
 export class home extends Component {
   constructor(props, context) {
     super(props, context);
-//    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
   state = {
     posts: [],
   };
+
+
+
 
   componentDidMount() {
 
@@ -70,36 +71,26 @@ export class home extends Component {
       })
       .catch((err) => console.log(err));
 
-    console.log("up here");
-
- //  this.props.getAllPosts();
-
-   // console.log(this.props.data);
-
-
 
 
   }
-
-  
 
 
   handleSubmit = (event) => {
     event.preventDefault();
 
     console.log("home line 57");
-    console.log(this.props.state);
     console.log(this.state);
     console.log(this.props);
 
- //   const newID = db.collection("Posts").doc().id;
- //   console.log(newID);
+    const newID = db.collection("Posts").doc().id;
+    console.log(newID);
 
     const postData = {
       body: this.state.newPost,
       username: this.props.user.credentials.username,
       userImage: this.props.user.credentials.imageUrl,
-  //    postId: newID
+      postId: newID
     };
 
     console.log("befpre creating post");
@@ -111,10 +102,8 @@ export class home extends Component {
   };
 
   handleChange = (event) => {
-    console.log("handle");
-    console.log(event);
     this.setState({
-      [event.target.name]: event.target.value
+      [event.target.name]: event.target.value,
     });
   };
 
@@ -124,12 +113,13 @@ export class home extends Component {
 
     let showPosts = this.state.posts ? (
       this.state.posts.map((posts) => (
+
         <Posts key={posts.username} posts={posts} />
       ))
     ) : (
       <p> Loading Posts... </p>
     );
-  
+
     return (
       <div style={{ backgroundColor: "#cceeff", width: "1000px", minHeight: "1020px", margin: "100px" }}>
         <img
@@ -145,8 +135,8 @@ export class home extends Component {
         <Grid container spacing={10}>
           <Grid item sm={4} xs={4}>
             <br />
-            <Profile user={this.props}/>
-            {/* <Card >
+            {/* <Profile /> */}
+            <Card >
               <CardContent >
                 <Typography
                   variant="h5"
@@ -175,7 +165,7 @@ export class home extends Component {
                   {this.props.user.credentials.email}
                 </Typography>
               </CardContent>
-            </Card> */}
+            </Card>
             <br />
             <br />
             <Card>
@@ -219,20 +209,17 @@ export class home extends Component {
 
 home.propTypes = {
   createPost: PropTypes.func.isRequired,
-  getAllPosts: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
   UI: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => ({
   user: state.user,
-  data: state.data,
   UI: state.UI
 });
 
 const mapActionsToProps = {
-  createPost,
-  getAllPosts
+  createPost
 };
 
 
