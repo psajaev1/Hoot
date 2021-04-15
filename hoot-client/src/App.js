@@ -41,6 +41,9 @@ const theme = createMuiTheme({
 
 const token = localStorage.FBIdToken;
 
+console.log("hi philly dilly");
+console.log(token);
+
 try {
 
   if (token) {

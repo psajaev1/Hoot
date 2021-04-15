@@ -123,8 +123,8 @@ export class home extends Component {
 
 
     let showPosts = this.state.posts ? (
-      this.state.posts.map((posts) => (
-        <Posts key={posts.username} posts={posts} />
+      this.state.posts.map((posts, index) => (
+        <Posts key={index} posts={posts} />
       ))
     ) : (
       <p> Loading Posts... </p>

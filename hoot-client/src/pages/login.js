@@ -18,6 +18,10 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { connect } from 'react-redux';
 import { loginUser } from '../redux/actions/userActions';
 
+
+
+
+
 const styles = {
   form: {
     textAlign: "center",
@@ -89,6 +93,7 @@ class login extends Component {
       [event.target.name]: event.target.value,
     });
   };
+
 
   render() {
     const { classes, UI: { loading } } = this.props;
@@ -169,6 +174,7 @@ class login extends Component {
   }
 }
 
+
 login.propTypes = {
   classes: PropTypes.object.isRequired,
   loginUser: PropTypes.func.isRequired,
@@ -177,12 +183,12 @@ login.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  user: state.user,
-  UI: state.UI
-});
+    user: state.user,
+    UI: state.UI
+  });
 
 const mapActionsToProps = {
-  loginUser
-};
+    loginUser
+  };
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(login));

@@ -12,6 +12,8 @@ firebase.initializeApp(firebaseConfig);
 
 // User login
 exports.login = (req, res) => {
+  console.log("yo phil bob");
+  functions.logger.info("yophilbob");
   const user = {
     email: req.body.email,
     password: req.body.password,
