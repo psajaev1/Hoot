@@ -22,7 +22,8 @@ import signup from "./pages/signup";
 import calendar from "./pages/Calendar";
 import match from "./pages/match"
 
-axios.default.baseURL = 'https://us-central1-senior-design-a1e06.cloudfunctions.net/api';
+axios.default.baseURL = 'https://us-central1-senior-design-a1e06.cloudfunctions.net';
+
 
 const theme = createMuiTheme({
   palette: {
@@ -40,6 +41,9 @@ const theme = createMuiTheme({
 });
 
 const token = localStorage.FBIdToken;
+// let token = localStorage.getItem("FBIdToken") || null;
+// const token = await getToken(request);
+
 
 console.log("hi philly dilly");
 console.log(token);

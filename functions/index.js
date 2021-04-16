@@ -5,11 +5,7 @@ const app = require("express")();
 const FBAuth = require("./util/FBAuth");
 
 const cors = require('cors');
-app.use(cors({
-  methods: ["GET", "POST"],
-  credentials: true,
-  origin: "http://localhost:3000"
-}));
+app.use(cors({}));
 
 const { db } = require("./util/admin");
 

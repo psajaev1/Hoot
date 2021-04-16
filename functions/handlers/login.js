@@ -13,11 +13,11 @@ firebase.initializeApp(firebaseConfig);
 // User login
 exports.login = (req, res) => {
   console.log("yo phil bob");
-  functions.logger.info("yophilbob");
   const user = {
     email: req.body.email,
     password: req.body.password,
   };
+
 
   const { valid, errors } = validateLoginData(user);
   if (!valid) return res.status(400).json(errors);
@@ -39,6 +39,8 @@ exports.login = (req, res) => {
           .json({ general: "Incorrect credentials, please try again" });
       } else return res.status(500).json({ error: err.code });
     });
+
+  
 };
 
 // User signup
