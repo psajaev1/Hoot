@@ -25,7 +25,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 firebase.initializeApp(
   {
     projectId: "senior-design-a1e06",
-    databaseURL: "https://senior-design-a1e06-default-rtdb.firebaseio.com/"
+    databaseURL: "https://senior-design-a1e06.firebaseio.com"
   });
 var db = firebase.firestore();
 
@@ -123,8 +123,8 @@ export class home extends Component {
 
 
     let showPosts = this.state.posts ? (
-      this.state.posts.map((posts) => (
-        <Posts key={posts.username} posts={posts} />
+      this.state.posts.map((posts, index) => (
+        <Posts key={index} posts={posts} />
       ))
     ) : (
       <p> Loading Posts... </p>

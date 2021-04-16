@@ -184,6 +184,7 @@ export const loginUser = (userData, history) => (dispatch) => {
         .then((res) => {
             console.log("eppepepepepepee");
             console.log(res);
+            console.log(res.config.data);
             console.log(res.data.token);
             setAuthorizationHeader(res.data.token);
             dispatch(getUserData());
